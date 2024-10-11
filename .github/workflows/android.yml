@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - andere-branch  # Beispiel für zusätzliche Branches
   pull_request:
     branches:
       - master
@@ -27,8 +26,11 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Clear Gradle cache
+        run: ./gradlew cleanBuildCache
+
       - name: Build with Gradle
-        run: ./gradlew build --info  # Ausgabe von Build-Informationen
+        run: ./gradlew build --stacktrace  # Ausgabe des Stacktraces
 
       - name: Cache Gradle packages
         uses: actions/cache@v3
@@ -55,8 +57,11 @@ jobs:
       - name: Grant execute permission for gradlew (Windows)
         run: icacls gradlew /grant Everyone:F
 
+      - name: Clear Gradle cache (Windows)
+        run: .\gradlew cleanBuildCache
+
       - name: Build with Gradle (Windows)
-        run: ./gradlew build --info  # Ausgabe von Build-Informationen
+        run: ./gradlew build --stacktrace  # Ausgabe des Stacktraces
 
       - name: Cache Gradle packages
         uses: actions/cache@v3
