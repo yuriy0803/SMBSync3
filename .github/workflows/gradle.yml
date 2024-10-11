@@ -1,46 +1,49 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
-name: Java CI with Gradle
+name: Android CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches:
+      - master
   pull_request:
-    branches: [ "master" ]
+    branches:
+      - master
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Check out the repository
+      uses: actions/checkout@v4
+
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
 
-    # Make the Gradle wrapper executable
+    - name: Set up Gradle
+      uses: gradle/gradle-build-action@v2
+
     - name: Make Gradlew executable
       run: chmod +x ./gradlew
 
-    # Configure Gradle for optimal use in GitHub Actions, including caching of downloaded dependencies.
-    # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
-    - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
-
-    - name: Build with Gradle Wrapper
+    - name: Build with Gradle
       run: ./gradlew build
 
-    # Cache Gradle packages to speed up builds
+    - name: Run unit tests
+      run: ./gradlew test
+
+    - name: Run lint checks
+      run: ./gradlew lint
+
+    - name: Run assembleDebug
+      run: ./gradlew assembleDebug
+
+    - name: Run assembleRelease
+      run: ./gradlew assembleRelease
+
+    # Optional: Cache Gradle dependencies
     - name: Cache Gradle packages
       uses: actions/cache@v3
       with:
@@ -51,21 +54,15 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle
 
-  dependency-submission:
-
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
+    # Save APKs as artifacts
+    - name: Upload Debug APK
+      uses: actions/upload-artifact@v3
       with:
-        java-version: '17'
-        distribution: 'temurin'
+        name: debug-apk
+        path: app/build/outputs/apk/debug/*.apk
 
-    # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
-    # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
-    - name: Generate and submit dependency graph
-      uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+    - name: Upload Release APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: release-apk
+        path: app/build/outputs/apk/release/*.apk
