@@ -26,11 +26,8 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Clear Gradle cache
-        run: ./gradlew cleanBuildCache
-
       - name: Build with Gradle
-        run: ./gradlew build --stacktrace  # Ausgabe des Stacktraces
+        run: ./gradlew build
 
       - name: Cache Gradle packages
         uses: actions/cache@v3
@@ -39,34 +36,3 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-
-  build-windows:
-    runs-on: windows-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: gradle
-
-      - name: Grant execute permission for gradlew (Windows)
-        run: icacls gradlew /grant Everyone:F
-
-      - name: Clear Gradle cache (Windows)
-        run: .\gradlew cleanBuildCache
-
-      - name: Build with Gradle (Windows)
-        run: ./gradlew build --stacktrace  # Ausgabe des Stacktraces
-
-      - name: Cache Gradle packages
-        uses: actions/cache@v3
-        with:
-          path: C:\\Users\\runneradmin\\.gradle\\caches
-          key: windows-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            windows-gradle-
