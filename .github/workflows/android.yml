@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - andere-branch  # Beispiel für zusätzliche Branches
   pull_request:
     branches:
       - master
@@ -27,7 +28,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build --info  # Ausgabe von Build-Informationen
 
       - name: Cache Gradle packages
         uses: actions/cache@v3
@@ -37,7 +38,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-  # Optional: Adding a job for Windows builds
   build-windows:
     runs-on: windows-latest
 
@@ -56,7 +56,7 @@ jobs:
         run: icacls gradlew /grant Everyone:F
 
       - name: Build with Gradle (Windows)
-        run: ./gradlew build
+        run: ./gradlew build --info  # Ausgabe von Build-Informationen
 
       - name: Cache Gradle packages
         uses: actions/cache@v3
