@@ -1,0 +1,148 @@
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+<!--    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>-->
+<!--    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />-->
+
+<!--    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />-->
+
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+
+<!--    Enable "ALL_FILE_ACCESS"-->
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+
+    <application
+        android:icon="@drawable/smbsync"
+        android:label="@string/app_name"
+        android:theme="@style/Main"
+        android:allowBackup="false"
+        android:largeHeap="true"
+        android:requestLegacyExternalStorage="true"
+        >
+        <receiver
+            android:name=".SyncReceiver"
+            android:label="SyncReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+
+                <action android:name="android.intent.action.DATE_CHANGED"/>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+                <action android:name="android.intent.action.TIME_SET"/>
+
+                <action android:name="${applicationId}.ACTION_TIMER_EXPIRED" />
+<!--                <action android:name="${applicationId}.ACTION_SET_TIMER" />-->
+<!--                <action android:name="${applicationId}.ACTION_SET_TIMER_IF_NOT_SET" />-->
+            </intent-filter>
+
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>-->
+<!--                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>-->
+<!--            </intent-filter>-->
+
+        </receiver>
+
+        <activity
+            android:name=".ActivityMain"
+            android:launchMode="standard"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|layoutDirection|fontScale"
+            android:screenOrientation="unspecified"
+            android:alwaysRetainTaskState="true"
+            android:exported="true">
+
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+<!--            <meta-data android:name="android.app.shortcuts"-->
+<!--                android:resource="@xml/shortcuts" />-->
+
+        </activity>
+
+        <activity
+            android:name=".ActivitySettings"
+            android:screenOrientation="unspecified"
+            android:icon="@drawable/smbsync">
+
+            <!-- Return to main app when pressing Top action bar back button -->
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".ActivityMain"/>
+        </activity>
+
+        <activity
+            android:name=".ActivityPasswordSettings"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|layoutDirection|fontScale"
+            android:screenOrientation="unspecified"
+            android:icon="@drawable/smbsync"
+            android:excludeFromRecents="true">
+        </activity>
+
+        <activity
+            android:name=".ActivityIntentHandler"
+            android:theme="@android:style/Theme.Translucent"
+            android:launchMode="singleTop"
+            android:taskAffinity=".ActivityIntentHandler"
+            android:screenOrientation="unspecified"
+            android:excludeFromRecents="true"
+            android:exported="true">
+
+            <intent-filter >
+                <action android:name="${applicationId}.ACTION_START_SYNC"/>
+                <action android:name="${applicationId}.ACTION_AUTO_SYNC"/>
+                <action android:name="${applicationId}.ACTION_QUERY_SYNC_TASK"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ActivityShortcut"
+            android:label="@string/app_name_auto_sync"
+            android:launchMode="singleTop"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent"
+            android:taskAffinity=".ActivityShortcut"
+            android:excludeFromRecents="true">
+            <intent-filter >
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.sentaroh.android.Utilities3.CrashReport"
+            android:process=":CrashReport"
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|layoutDirection|fontScale"
+            android:screenOrientation="unspecified" android:launchMode="standard"
+            android:excludeFromRecents="true">
+        </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/file_provider_paths"/>
+        </provider>
+
+    </application>
+</manifest>

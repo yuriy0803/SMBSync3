@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory>
+        <Preference
+            android:key="@string/settings_app_permissions"
+            android:title="@string/settings_app_permissions_title"/>
+        <Preference
+            android:key="@string/settings_storage_permission"
+            android:title="set in code"/>
+        <CheckBoxPreference
+            android:key="@string/settings_exit_clean"
+            android:title="@string/settings_exit_clean_title"
+            android:summary="@string/settings_exit_clean_summary_ena"
+            android:singleLineTitle="false"/>
+    </PreferenceCategory>
+</PreferenceScreen>
