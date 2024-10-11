@@ -22,28 +22,9 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Set up Gradle
-      uses: gradle/gradle-build-action@v2
-
-    - name: Make Gradlew executable
+    - name: Set up Gradle Wrapper
       run: chmod +x ./gradlew
 
-    - name: Build with Gradle
-      run: ./gradlew build
-
-    - name: Run unit tests
-      run: ./gradlew test
-
-    - name: Run lint checks
-      run: ./gradlew lint
-
-    - name: Run assembleDebug
-      run: ./gradlew assembleDebug
-
-    - name: Run assembleRelease
-      run: ./gradlew assembleRelease
-
-    # Optional: Cache Gradle dependencies
     - name: Cache Gradle packages
       uses: actions/cache@v3
       with:
@@ -54,7 +35,21 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle
 
-    # Save APKs as artifacts
+    - name: Build with Gradle
+      run: ./gradlew build
+
+    - name: Run unit tests
+      run: ./gradlew test
+
+    - name: Run lint checks
+      run: ./gradlew lint
+
+    - name: Assemble Debug APK
+      run: ./gradlew assembleDebug
+
+    - name: Assemble Release APK
+      run: ./gradlew assembleRelease
+
     - name: Upload Debug APK
       uses: actions/upload-artifact@v3
       with:
